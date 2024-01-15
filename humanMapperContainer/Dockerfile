@@ -41,7 +41,7 @@ RUN ./configure
 RUN make
 RUN make install
 
-ENV PATH="${PATH}:/tmp/samtools-1.17/bin"
+ENV PATH="${PATH}:/tmp/samtools-1.18/bin"
 
 WORKDIR /
 

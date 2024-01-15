@@ -3,58 +3,60 @@ cwlVersion: v1.2
 class: CommandLineTool
 
 doc: |
-  Filter human reads 
+  Filter uman reads using chm13
 
 requirements:
   InlineJavascriptRequirement: {}
   InitialWorkDirRequirement:
-    listing: [ $(inputs.index)]
+    listing: [ $(inputs.index_chm13)]
 hints:
   ResourceRequirement:
     coresMax: $(inputs.threads)
   DockerRequirement:
-    dockerPull: scontaldo/humanmapper 
+    dockerPull: scontaldo/humanmapper
 
 baseCommand: ["bash", "/scripts/humanMapper.sh"]
 
-inputs: 
+inputs:
   read_1:
     type: File
     inputBinding:
-      position: 1
+      position: 1 
   read_2:
     type: File
     inputBinding:
       position: 2
-  index:
-    doc: "Index used as reference"
+  index_chm13:
+    doc: "index chm13 used as reference"
     type: File
-    inputBinding: 
-      position: 3 
+    inputBinding:
+      position: 3
     secondaryFiles:
       - .amb
       - .ann
       - .bwt
-      - .fai
       - .pac
       - .sa
   threads:
-    doc: "Maximum number of compute threads"
+    doc: "Max number of threads in use"
     type: int?
     default: 1
     inputBinding:
       position: 4
-
+      
 outputs:
-  unmapped_R1:
+  unmapped_chm_R1:
     type: File
     outputBinding:
-      glob: "*_hg38_unmapped_R1.fastq.gz"
-  unmapped_R2:
+      glob: "*chm13v2.0_unmapped_R1.fastq.gz"
+  unmapped_chm_R2:
     type: File
     outputBinding:
-      glob: "*_hg38_unmapped_R2.fastq.gz"
-  #single_pair:
+      glob: "*chm13v2.0_unmapped_R2.fastq.gz"
+  #chm_single_pair:
   #  type: File
   #  outputBinding:
-  #    glob: "*_single.fastq.gz"
+  #    glob: "*_chm_single.fastq.gz"
+
+
+

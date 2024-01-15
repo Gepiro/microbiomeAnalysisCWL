@@ -37,24 +37,19 @@ inputs:
       - .sa
 
 outputs:
-  unmapped_R1:
-    type: File[]
-    outputSource: humanmapper/unmapped_R1
-  unmapped_R2:
-    type: File[]
-    outputSource: humanmapper/unmapped_R2
-#  single_pair:
-#    type: File[]
-#    outputSource: humanmapper/single_pair
+ 
   unmapped_chm_R1:
     type: File[]
     outputSource: humanMapper_chm13/unmapped_chm_R1
   unmapped_chm_R2:
     type: File[]
     outputSource: humanMapper_chm13/unmapped_chm_R2
-#  chm_single_pair:
-#    type: File[]
-#    outputSource: humanMapper_chm13/chm_single_pair
+  unmapped_R1:
+    type: File[]
+    outputSource: humanmapper/unmapped_R1
+  unmapped_R2:
+    type: File[]
+    outputSource: humanmapper/unmapped_R2
   kraken2_output:
     type: File[]
     outputSource: kraken2/kraken2
@@ -80,33 +75,33 @@ steps:
     in:
       fastq_directory: fastq_directory
     out: [read_1, read_2]
-  humanmapper:
-    run: cwl/humanMapper.cwl
-    scatter: [read_1, read_2]
-    scatterMethod: dotproduct
-    in:
-      read_1: check-input/read_1
-      read_2: check-input/read_2
-      index: index
-      threads: threads
-    out: [unmapped_R1, unmapped_R2]
   humanMapper_chm13:
     run: cwl/humanMapperChm13.cwl
     scatter: [read_1, read_2]
     scatterMethod: dotproduct
     in:
-      read_1: humanmapper/unmapped_R1
-      read_2: humanmapper/unmapped_R2
+      read_1: check-input/read_1
+      read_2: check-input/read_2
       index_chm13: index_chm13
       threads: threads
     out: [unmapped_chm_R1, unmapped_chm_R2]
-  kraken2:
-    run: cwl/kraken2.cwl
+  humanmapper:
+    run: cwl/humanMapper.cwl
     scatter: [read_1, read_2]
     scatterMethod: dotproduct
     in:
       read_1: humanMapper_chm13/unmapped_chm_R1
       read_2: humanMapper_chm13/unmapped_chm_R2
+      index: index
+      threads: threads
+    out: [unmapped_R1, unmapped_R2]
+  kraken2:
+    run: cwl/kraken2.cwl
+    scatter: [read_1, read_2]
+    scatterMethod: dotproduct
+    in:
+      read_1: humanmapper/unmapped_R1
+      read_2: humanmapper/unmapped_R2
       db_path: db_path
       threads: threads
     out: [kraken2, report] 
